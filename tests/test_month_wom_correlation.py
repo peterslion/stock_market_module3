@@ -36,5 +36,6 @@ def test_october_week4_has_the_highest_absolute_correlation():
     assert "October_w1" in set(prepared["month_wom"])
 
     correlations = correlation_with_target(prepared)
-    assert correlations.index[0] == "month_wom_October_w4"
+    assert correlations.index[0] == "October_w4"
+    assert "month_wom_" not in correlations.index[0]
     assert rounded_absolute_correlation(correlations) == 0.021

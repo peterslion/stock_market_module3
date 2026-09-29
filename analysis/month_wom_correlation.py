@@ -105,6 +105,8 @@ def correlation_with_target(df: pd.DataFrame) -> pd.DataFrame:
     result = correlated.drop(labels=[TARGET]).rename("corr").to_frame()
     result["abs_corr"] = result["corr"].abs()
     result = result.sort_values("abs_corr", ascending=False)
+    # get_dummies names columns month_wom_October_w4. Report the week label itself.
+    result.index = result.index.str.removeprefix("month_wom_")
     result.index.name = "feature"
     return result
 

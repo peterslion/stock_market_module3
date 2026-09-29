@@ -11,7 +11,7 @@ Source file: `stocks_df_combined_2026_09_18.parquet.brotli`
 **0.021**
 
 That is the absolute Pearson correlation, rounded to three decimal places, of
-the strongest `month_wom` dummy. The dummy is `month_wom_October_w4`
+the strongest week-of-month dummy. The label is `October_w4`
 (correlation `0.021180`). October and November weeks occupy the top of the
 ranking, which matches the earlier observation that those months matter for
 the sign of 30-day-ahead growth.
@@ -51,6 +51,8 @@ The script downloads the source parquet into `data/` when it is missing, writes
 `data/stocks_with_month_wom_dummies.parquet`, and saves:
 
 - `results/q1_month_wom_answer.json`
-- `results/month_wom_correlations.csv` (every `month_wom` dummy, sorted by `abs_corr`)
+- `results/month_wom_correlations.csv` (every week label such as `October_w4`, sorted by `abs_corr`)
+
+`pandas.get_dummies` still stores those indicators as `month_wom_October_w4` in the dataset. The correlation table drops that prefix and keeps the week label.
 
 Large data files under `data/` are not committed.
