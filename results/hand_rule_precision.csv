@@ -1,0 +1,3 @@
+prediction,positives,tp,fp,precision,precision_rounded_3dp
+pred3_manual_dgs10_5,0,0,0,,
+pred4_manual_dgs10_fedfunds,15921,8001,7920,0.5025438100621821,0.503

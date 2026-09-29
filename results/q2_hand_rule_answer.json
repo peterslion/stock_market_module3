@@ -1,0 +1,28 @@
+{
+  "best": {
+    "prediction": "pred4_manual_dgs10_fedfunds",
+    "precision": 0.5025438100621821,
+    "precision_rounded_3dp": 0.503,
+    "positives": 15921,
+    "tp": 8001,
+    "fp": 7920
+  },
+  "rules": [
+    {
+      "prediction": "pred3_manual_dgs10_5",
+      "positives": 0,
+      "tp": 0,
+      "fp": 0,
+      "precision": NaN,
+      "precision_rounded_3dp": NaN
+    },
+    {
+      "prediction": "pred4_manual_dgs10_fedfunds",
+      "positives": 15921,
+      "tp": 8001,
+      "fp": 7920,
+      "precision": 0.5025438100621821,
+      "precision_rounded_3dp": 0.503
+    }
+  ]
+}
