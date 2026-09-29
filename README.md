@@ -5,6 +5,7 @@ Question write-ups:
 - [Question 1: month and week-of-month dummies](questions/01-month-and-week-of-month.md)
 - [Question 2: new hand rules](questions/02-hand-rules.md)
 - [Question 3: depth-10 tree](questions/03-pred5-clf10.md)
+- [Question 4: best tree depth](questions/04-best-tree-depth.md)
 
 This analysis measures which week-of-month seasonal dummy is most linearly
 associated with the binary label `is_positive_growth_30d_future`.

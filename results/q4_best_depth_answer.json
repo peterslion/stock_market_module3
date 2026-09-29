@@ -1,0 +1,11 @@
+{
+  "best_max_depth": 4,
+  "precision_test": 0.6291747790924068,
+  "precision_validation": 0.6532226597140931,
+  "prediction": "pred6_clf_best",
+  "random_state": 42,
+  "trained_on": [
+    "train",
+    "validation"
+  ]
+}

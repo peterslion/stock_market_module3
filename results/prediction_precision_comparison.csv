@@ -1,0 +1,8 @@
+prediction,precision_test
+pred0_manual_cci,0.5646036916395223
+pred1_manual_prev_g1,0.5786616557051885
+pred2_manual_prev_g1_and_snp,0.5725531356599318
+pred3_manual_dgs10_5,
+pred4_manual_dgs10_fedfunds,0.5025438100621821
+pred5_clf_10,0.5912146499768196
+pred6_clf_best,0.6291747790924068
