@@ -1,5 +1,7 @@
 # Month and week-of-month growth correlations
 
+Question write-ups live in [`questions/`](questions/01-month-and-week-of-month.md).
+
 This analysis measures which week-of-month seasonal dummy is most linearly
 associated with the binary label `is_positive_growth_30d_future`.
 
