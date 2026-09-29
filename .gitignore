@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.venv/
+data/*.parquet
+data/*.parquet.brotli
+data/*.html
+data/raw_download
