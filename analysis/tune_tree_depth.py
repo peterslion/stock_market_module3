@@ -18,8 +18,10 @@ from analysis.pred5_clf10 import (
     PRED5,
     TARGET,
     feature_matrix,
+    finite_row_mask,
     fit_pred5,
     prepare_modeling_frame,
+    remove_infinite_values,
 )
 from analysis.hand_rules import RESULTS_DIR
 
@@ -36,7 +38,12 @@ def binary_precision(y_true: pd.Series, y_pred: pd.Series) -> float:
 
 
 def depth_precision_table(frame: pd.DataFrame) -> pd.DataFrame:
-    """Test and validation precision for every depth from 1 to 20."""
+    """Test and validation precision for every depth from 1 to 20.
+
+    Rows with a non-finite numerical feature are removed first. Infinities and
+    missing values in what remains are set to 0. Percentile outliers are kept.
+    """
+    frame = remove_infinite_values(frame)
     matrix = feature_matrix(frame)
     y = frame[TARGET].astype(int).reset_index(drop=True)
     train_rows = frame["split"].isin(["train", "validation"]).to_numpy()
@@ -70,25 +77,30 @@ def best_max_depth(scores: pd.DataFrame) -> int:
 
 
 def add_pred6(frame: pd.DataFrame, depth: int) -> tuple[pd.DataFrame, str]:
-    """Refit the chosen depth on train+validation and predict every row."""
-    matrix = feature_matrix(frame)
-    y = frame[TARGET].astype(int).reset_index(drop=True)
-    train_rows = frame["split"].isin(["train", "validation"]).to_numpy()
+    """Refit the chosen depth on finite train+validation rows and predict those rows."""
+    kept = remove_infinite_values(frame)
+    matrix = feature_matrix(kept)
+    y = kept[TARGET].astype(int).reset_index(drop=True)
+    train_rows = kept["split"].isin(["train", "validation"]).to_numpy()
     clf = DecisionTreeClassifier(max_depth=depth, random_state=42)
     clf.fit(matrix.loc[train_rows], y.loc[train_rows])
     out = frame.copy()
-    out[PRED6] = clf.predict(matrix)
+    predicted = np.full(len(frame), np.nan)
+    predicted[finite_row_mask(frame)] = clf.predict(matrix)
+    out[PRED6] = predicted
     rules = export_text(clf, feature_names=list(matrix.columns), max_depth=3)
     return out, rules
 
 
 def compare_precision(frame: pd.DataFrame) -> pd.DataFrame:
-    """Test precision of pred0-pred6. pred5 is fit here if it is not already present."""
+    """Test precision of pred0-pred6 on rows with finite numerical features."""
     if PRED5 not in frame.columns:
         frame = frame.copy()
         frame[PRED5] = fit_pred5(frame)
-    test = frame["split"].eq("test")
-    y_test = frame.loc[test, TARGET].astype(int)
+    finite = remove_infinite_values(frame)
+    test = finite["split"].eq("test")
+    y_test = finite.loc[test, TARGET].astype(int)
+    frame = finite
     rows = []
     for column in HAND_RULES + [PRED5, PRED6]:
         rows.append(

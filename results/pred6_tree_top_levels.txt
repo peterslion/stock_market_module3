@@ -1,46 +1,46 @@
-|--- cpi_core_yoy <= 0.02
-|   |--- DGS10 <= 1.75
-|   |   |--- DGS1 <= 0.56
-|   |   |   |--- growth_snp500_90d <= 1.14
-|   |   |   |   |--- class: 1
-|   |   |   |--- growth_snp500_90d >  1.14
-|   |   |   |   |--- class: 1
-|   |   |--- DGS1 >  0.56
-|   |   |   |--- growth_btc_usd_30d <= 1.07
+|--- cpi_core_yoy <= 0.06
+|   |--- growth_gold_365d <= 0.84
+|   |   |--- growth_dji_365d <= 0.98
+|   |   |   |--- rocr <= 1.00
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |   |--- rocr >  1.00
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |--- growth_dji_365d >  0.98
+|   |   |   |--- Ticker_INFY <= 0.50
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |   |--- Ticker_INFY >  0.50
+|   |   |   |   |--- truncated branch of depth 2
+|   |--- growth_gold_365d >  0.84
+|   |   |--- growth_brent_oil_365d <= 1.36
+|   |   |   |--- gdppot_us_yoy <= 0.02
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |   |--- gdppot_us_yoy >  0.02
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |--- growth_brent_oil_365d >  1.36
+|   |   |   |--- growth_snp500_90d <= 1.05
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |   |--- growth_snp500_90d >  1.05
+|   |   |   |   |--- truncated branch of depth 2
+|--- cpi_core_yoy >  0.06
+|   |--- growth_dji_30d <= 0.96
+|   |   |--- obv <= 1230415808.00
+|   |   |   |--- growth_dax_3d <= 0.94
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |   |--- growth_dax_3d >  0.94
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |--- obv >  1230415808.00
+|   |   |   |--- growth_brent_oil_30d <= 1.10
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |   |--- growth_brent_oil_30d >  1.10
+|   |   |   |   |--- truncated branch of depth 2
+|   |--- growth_dji_30d >  0.96
+|   |   |--- Ticker_ITC.NS <= 0.50
+|   |   |   |--- Ticker_LLY <= 0.50
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |   |--- Ticker_LLY >  0.50
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |--- Ticker_ITC.NS >  0.50
+|   |   |   |--- growth_epi_365d <= 1.73
+|   |   |   |   |--- truncated branch of depth 2
+|   |   |   |--- growth_epi_365d >  1.73
 |   |   |   |   |--- class: 0
-|   |   |   |--- growth_btc_usd_30d >  1.07
-|   |   |   |   |--- class: 1
-|   |--- DGS10 >  1.75
-|   |   |--- growth_wti_oil_365d <= 1.50
-|   |   |   |--- Month_7 <= 0.50
-|   |   |   |   |--- class: 1
-|   |   |   |--- Month_7 >  0.50
-|   |   |   |   |--- class: 0
-|   |   |--- growth_wti_oil_365d >  1.50
-|   |   |   |--- growth_wti_oil_30d <= 1.00
-|   |   |   |   |--- class: 1
-|   |   |   |--- growth_wti_oil_30d >  1.00
-|   |   |   |   |--- class: 1
-|--- cpi_core_yoy >  0.02
-|   |--- FEDFUNDS <= 4.96
-|   |   |--- growth_btc_usd_365d <= 1.21
-|   |   |   |--- growth_dji_90d <= 0.96
-|   |   |   |   |--- class: 1
-|   |   |   |--- growth_dji_90d >  0.96
-|   |   |   |   |--- class: 0
-|   |   |--- growth_btc_usd_365d >  1.21
-|   |   |   |--- growth_gold_365d <= 1.30
-|   |   |   |   |--- class: 1
-|   |   |   |--- growth_gold_365d >  1.30
-|   |   |   |   |--- class: 0
-|   |--- FEDFUNDS >  4.96
-|   |   |--- growth_wti_oil_365d <= 0.91
-|   |   |   |--- cpi_core_mom <= 0.00
-|   |   |   |   |--- class: 1
-|   |   |   |--- cpi_core_mom >  0.00
-|   |   |   |   |--- class: 0
-|   |   |--- growth_wti_oil_365d >  0.91
-|   |   |   |--- growth_dji_90d <= 1.05
-|   |   |   |   |--- class: 1
-|   |   |   |--- growth_dji_90d >  1.05
-|   |   |   |   |--- class: 1

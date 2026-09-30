@@ -28,6 +28,6 @@ def test_only_pred5_requires_every_hand_rule_to_be_wrong():
     assert flags.tolist() == [1, 0, 0]
 
 
-def test_test_set_unique_correct_count_is_1801():
+def test_test_set_unique_correct_count_is_2622():
     frame = build_predictions()
-    assert count_unique_correct_on_test(frame) == 1801
+    assert count_unique_correct_on_test(frame) == 2622

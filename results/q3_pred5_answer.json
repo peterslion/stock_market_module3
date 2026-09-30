@@ -1,6 +1,6 @@
 {
   "prediction": "pred5_clf_10",
-  "test_only_pred5_is_correct": 1801,
+  "test_only_pred5_is_correct": 2622,
   "max_depth": 10,
   "random_state": 42,
   "trained_on": [

@@ -87,15 +87,33 @@ def feature_matrix(frame: pd.DataFrame) -> pd.DataFrame:
     return matrix.replace([np.inf, -np.inf], np.nan).fillna(0)
 
 
+def finite_row_mask(frame: pd.DataFrame) -> np.ndarray:
+    """True where every numerical feature is finite. Missing values count as not finite."""
+    features = numerical_features(list(frame.columns))
+    return np.isfinite(frame[features].to_numpy(dtype=float)).all(axis=1)
+
+
+def remove_infinite_values(frame: pd.DataFrame) -> pd.DataFrame:
+    """Drop rows with a non-finite value in any numerical feature.
+
+    ``np.isfinite`` is false for both infinities and missing values, matching
+    the notebook helper. Outlier percentiles are not applied: the notebook
+    keeps those rows.
+    """
+    return frame.loc[finite_row_mask(frame)].copy()
+
+
 def fit_pred5(frame: pd.DataFrame) -> pd.Series:
-    """Fit a depth-10 tree on train+validation and predict every row."""
-    matrix = feature_matrix(frame)
-    y = frame[TARGET].astype(int).reset_index(drop=True)
-    train_rows = frame["split"].isin(["train", "validation"]).to_numpy()
+    """Fit a depth-10 tree on finite train+validation rows and predict those rows."""
+    kept = remove_infinite_values(frame)
+    matrix = feature_matrix(kept)
+    y = kept[TARGET].astype(int).reset_index(drop=True)
+    train_rows = kept["split"].isin(["train", "validation"]).to_numpy()
     clf = DecisionTreeClassifier(max_depth=10, random_state=42)
     clf.fit(matrix.loc[train_rows], y.loc[train_rows])
-    predictions = clf.predict(matrix)
-    return pd.Series(predictions, index=frame.index, name=PRED5)
+    predicted = np.full(len(frame), np.nan)
+    predicted[finite_row_mask(frame)] = clf.predict(matrix)
+    return pd.Series(predicted, index=frame.index, name=PRED5)
 
 
 def only_pred5_is_correct(frame: pd.DataFrame) -> pd.Series:
