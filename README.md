@@ -16,13 +16,13 @@ Source file: `stocks_df_combined_2026_09_18.parquet.brotli`
 
 ## Answer
 
-**0.021**
+**0.025**
 
 That is the absolute Pearson correlation, rounded to three decimal places, of
-the strongest week-of-month dummy. The label is `October_w4`
-(correlation `0.021180`). October and November weeks occupy the top of the
-ranking, which matches the earlier observation that those months matter for
-the sign of 30-day-ahead growth.
+the strongest week-of-month dummy on rows from 2000-01-01 onward. The label is
+`October_w4` (correlation `0.024584`). October and November weeks occupy the
+top of the ranking, which matches the earlier observation that those months
+matter for the sign of 30-day-ahead growth.
 
 ## How the features are built
 
@@ -40,10 +40,13 @@ Week of month starts at 1:
 - `Weekday`
 - `Ticker`
 - `ticker_type`
-- `month_wom`
+- `month_wom` and `month_week` (the same `October_w1` label)
+- `month_day` (for example `October_d13`)
 
-On this file that is 115 dummy columns: 12 months, 7 weekdays, 33 tickers,
-3 ticker types, and 60 month-week labels (12 months × 5 weeks). The original
+The frame is limited to `Date >= 2000-01-01`. `ln_volume` is added before that
+cutoff, and the notebook column groups `GROWTH`, `TO_PREDICT`,
+`TECHNICAL_PATTERNS`, `MACRO`, `NUMERICAL`, and `TO_DROP` are built from the
+source file. The original
 categorical columns stay in the frame, and the dummy columns are kept so later
 steps can use them as features. The original month-start timestamp is preserved
 as `month_start`.

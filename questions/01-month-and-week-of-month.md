@@ -24,8 +24,8 @@ The new dummies stay in the dataset for later questions.
 
 ## Answer
 
-**0.021**
+**0.025**
 
-The largest absolute correlation is `October_w4` (raw value `0.021180`). The ranked list is `results/month_wom_correlations.csv`.
+The sample is `Date >= 2000-01-01`, matching the notebook. The largest absolute correlation is `October_w4` (raw value `0.024584`). The ranked list is `results/month_wom_correlations.csv`.
 
 Source data: [stocks_df_combined_2026_09_18.parquet.brotli](https://drive.google.com/uc?id=1oQSUMCs2DyQQIh8Y62UhrT00cIsE9Sr5).

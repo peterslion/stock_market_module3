@@ -23,7 +23,39 @@ RAW_FILENAME = "stocks_df_combined_2026_09_18.parquet.brotli"
 PREPARED_FILENAME = "stocks_with_month_wom_dummies.parquet"
 
 TARGET = "is_positive_growth_30d_future"
-CATEGORICAL_FEATURES = ["Month", "Weekday", "Ticker", "ticker_type", "month_wom"]
+CATEGORICAL_FEATURES = [
+    "Month",
+    "Weekday",
+    "Ticker",
+    "ticker_type",
+    "month_wom",
+    "month_week",
+    "month_day",
+]
+OHLCV = ["Open", "High", "Low", "Close", "Adj Close_x", "Volume"]
+CUSTOM_NUMERICAL = [
+    "SMA10",
+    "SMA20",
+    "growing_moving_average",
+    "high_minus_low_relative",
+    "volatility",
+    "ln_volume",
+]
+TECHNICAL_INDICATORS = [
+    "adx", "adxr", "apo", "aroon_1", "aroon_2", "aroonosc", "bop", "cci", "cmo", "dx",
+    "macd", "macdsignal", "macdhist", "macd_ext", "macdsignal_ext", "macdhist_ext",
+    "macd_fix", "macdsignal_fix", "macdhist_fix", "mfi", "minus_di", "mom", "plus_di",
+    "dm", "ppo", "roc", "rocp", "rocr", "rocr100", "rsi", "slowk", "slowd", "fastk",
+    "fastd", "fastk_rsi", "fastd_rsi", "trix", "ultosc", "willr", "ad", "adosc", "obv",
+    "atr", "natr", "ht_dcperiod", "ht_dcphase", "ht_phasor_inphase", "ht_phasor_quadrature",
+    "ht_sine_sine", "ht_sine_leadsine", "ht_trendmod", "avgprice", "medprice", "typprice",
+    "wclprice",
+]
+MACRO = [
+    "gdppot_us_yoy", "gdppot_us_qoq", "cpi_core_yoy", "cpi_core_mom",
+    "FEDFUNDS", "DGS1", "DGS5", "DGS10",
+]
+SAMPLE_START = "2000-01-01"
 
 
 def raw_data_path() -> Path:
@@ -52,6 +84,59 @@ def download_raw_data(destination: Path | None = None) -> Path:
     return destination
 
 
+def growth_columns(columns: pd.Index | list[str]) -> list[str]:
+    return [column for column in columns if column.startswith("growth_") and "future" not in column]
+
+
+def to_predict_columns(columns: pd.Index | list[str]) -> list[str]:
+    return [column for column in columns if "future" in column]
+
+
+def technical_pattern_columns(columns: pd.Index | list[str]) -> list[str]:
+    return [column for column in columns if "cdl" in column]
+
+
+def feature_sets(df: pd.DataFrame) -> dict[str, list[str]]:
+    """Column groups from the notebook's dataset-preparation snippet."""
+    columns = list(df.columns)
+    categorical = ["Month", "Weekday", "Ticker", "ticker_type"]
+    growth = growth_columns(columns)
+    patterns = technical_pattern_columns(columns)
+    to_drop = [
+        column
+        for column in ["Year", "Date", "index_x", "index_y", "index", "Quarter", "Adj Close_y"]
+        + categorical
+        + OHLCV
+        if column in df.columns
+    ]
+    numerical = growth + [column for column in TECHNICAL_INDICATORS if column in df.columns]
+    numerical += patterns + [column for column in CUSTOM_NUMERICAL if column in df.columns]
+    numerical += [column for column in MACRO if column in df.columns]
+    return {
+        "GROWTH": growth,
+        "TO_PREDICT": to_predict_columns(columns),
+        "TECHNICAL_PATTERNS": patterns,
+        "MACRO": [column for column in MACRO if column in df.columns],
+        "NUMERICAL": numerical,
+        "TO_DROP": to_drop,
+    }
+
+
+def add_ln_volume(df: pd.DataFrame) -> pd.DataFrame:
+    """Replace zero volume before the log so the transform stays finite."""
+    out = df.copy()
+    out["ln_volume"] = out["Volume"].replace(0, np.nan).fillna(1e-9).map(np.log)
+    return out
+
+
+def ticker_date_span(df: pd.DataFrame) -> pd.DataFrame:
+    return df.groupby("Ticker")["Date"].agg(["min", "max", "count"])
+
+
+def limit_to_sample(df: pd.DataFrame) -> pd.DataFrame:
+    return df.loc[df["Date"] >= SAMPLE_START].copy()
+
+
 def week_of_month(dates: pd.Series) -> pd.Series:
     """Week of month starting at 1. Week 1 is days 1-7, week 2 is days 8-14, and so on."""
     return (dates.dt.day - 1) // 7 + 1
@@ -69,7 +154,10 @@ def add_month_wom(df: pd.DataFrame) -> pd.DataFrame:
     if "month_start" not in out.columns:
         out["month_start"] = out["Month"]
     out["Month"] = out["Date"].dt.month_name()
-    out["month_wom"] = out["Month"] + "_w" + week_of_month(out["Date"]).astype(str)
+    week = week_of_month(out["Date"]).astype(str)
+    out["month_wom"] = out["Month"] + "_w" + week
+    out["month_week"] = out["month_wom"]
+    out["month_day"] = out["Month"] + "_d" + out["Date"].dt.day.astype(str)
     return out
 
 
@@ -120,10 +208,22 @@ def rounded_absolute_correlation(correlations: pd.DataFrame, digits: int = 3) ->
 
 
 def prepare_dataset(source: pd.DataFrame | None = None) -> pd.DataFrame:
-    """Return the modeling frame with month_wom and categorical dummies attached."""
+    """Return the post-2000 frame with calendar labels and categorical dummies.
+
+    Preparation follows the notebook: log volume, the GROWTH / TO_PREDICT /
+    TECHNICAL_PATTERNS / MACRO / NUMERICAL / TO_DROP lists, a per-ticker date
+    summary, and the ``Date >= 2000-01-01`` sample.
+    """
     if source is None:
         source = pd.read_parquet(download_raw_data())
-    featured = add_month_wom(source)
+    prepared = add_ln_volume(source)
+    sets = feature_sets(prepared)
+    prepared.attrs["feature_sets"] = sets
+    span = ticker_date_span(prepared)
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    span.to_csv(RESULTS_DIR / "ticker_date_span.csv")
+    featured = add_month_wom(limit_to_sample(prepared))
+    featured.attrs["feature_sets"] = sets
     return add_categorical_dummies(featured)
 
 

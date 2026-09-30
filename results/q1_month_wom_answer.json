@@ -1,8 +1,8 @@
 {
   "target": "is_positive_growth_30d_future",
   "most_correlated_month_wom_dummy": "October_w4",
-  "correlation": 0.02118033950631298,
-  "absolute_correlation": 0.02118033950631298,
-  "absolute_correlation_rounded_3dp": 0.021,
+  "correlation": 0.02458416756158805,
+  "absolute_correlation": 0.02458416756158805,
+  "absolute_correlation_rounded_3dp": 0.025,
   "n_month_wom_dummies": 60
 }
