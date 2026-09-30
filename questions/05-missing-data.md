@@ -2,7 +2,7 @@
 
 Which new indicators should be added, given the correlation results and the decision tree?
 
-The best tree has test precision 0.629 at depth 4. Deeper trees raise validation precision to 0.946 and lower test precision. The label is only partly explained by the current columns, so the next gain is new information rather than a deeper tree.
+The best tree has test precision 0.629 at depth 4. Missing feature values are filled with 0 before that fit, and no rows are dropped. Deeper trees raise validation precision to 0.946 and lower test precision. The label is only partly explained by the current columns, so the next gain is new information rather than a deeper tree.
 
 What the current results already use:
 

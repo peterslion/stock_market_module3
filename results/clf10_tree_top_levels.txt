@@ -1,0 +1,22 @@
+|--- cpi_core_yoy <= 0.02
+|   |--- DGS10 <= 1.75
+|   |   |--- DGS1 <= 0.56
+|   |   |   |--- truncated branch of depth 8
+|   |   |--- DGS1 >  0.56
+|   |   |   |--- truncated branch of depth 8
+|   |--- DGS10 >  1.75
+|   |   |--- growth_wti_oil_365d <= 1.50
+|   |   |   |--- truncated branch of depth 8
+|   |   |--- growth_wti_oil_365d >  1.50
+|   |   |   |--- truncated branch of depth 8
+|--- cpi_core_yoy >  0.02
+|   |--- FEDFUNDS <= 4.96
+|   |   |--- growth_btc_usd_365d <= 1.21
+|   |   |   |--- truncated branch of depth 8
+|   |   |--- growth_btc_usd_365d >  1.21
+|   |   |   |--- truncated branch of depth 8
+|   |--- FEDFUNDS >  4.96
+|   |   |--- growth_wti_oil_365d <= 0.91
+|   |   |   |--- truncated branch of depth 8
+|   |   |--- growth_wti_oil_365d >  0.91
+|   |   |   |--- truncated branch of depth 8

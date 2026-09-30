@@ -104,16 +104,16 @@ def remove_infinite_values(frame: pd.DataFrame) -> pd.DataFrame:
 
 
 def fit_pred5(frame: pd.DataFrame) -> pd.Series:
-    """Fit a depth-10 tree on finite train+validation rows and predict those rows."""
-    kept = remove_infinite_values(frame)
-    matrix = feature_matrix(kept)
-    y = kept[TARGET].astype(int).reset_index(drop=True)
-    train_rows = kept["split"].isin(["train", "validation"]).to_numpy()
+    """Fit a depth-10 tree on train+validation and predict every row.
+
+    Infinities and missing feature values are set to 0. No rows are dropped.
+    """
+    matrix = feature_matrix(frame)
+    y = frame[TARGET].astype(int).reset_index(drop=True)
+    train_rows = frame["split"].isin(["train", "validation"]).to_numpy()
     clf = DecisionTreeClassifier(max_depth=10, random_state=42)
     clf.fit(matrix.loc[train_rows], y.loc[train_rows])
-    predicted = np.full(len(frame), np.nan)
-    predicted[finite_row_mask(frame)] = clf.predict(matrix)
-    return pd.Series(predicted, index=frame.index, name=PRED5)
+    return pd.Series(clf.predict(matrix), index=frame.index, name=PRED5)
 
 
 def only_pred5_is_correct(frame: pd.DataFrame) -> pd.Series:
@@ -146,6 +146,8 @@ def write_results(count: int) -> None:
         "max_depth": 10,
         "random_state": 42,
         "trained_on": ["train", "validation"],
+        "missing_values": "filled with 0",
+        "rows_dropped": 0,
     }
     (RESULTS_DIR / "q3_pred5_answer.json").write_text(json.dumps(payload, indent=2) + "\n")
 

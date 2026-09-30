@@ -1,18 +1,68 @@
 [
   {
-    "positives": 31047,
-    "tp": 17470,
-    "fp": 13577,
-    "precision": 0.5626952684639418,
-    "precision_rounded_3dp": 0.563,
-    "prediction": "pred_low_cpi_high_gold"
+    "positives": 0,
+    "tp": 0,
+    "fp": 0,
+    "precision": null,
+    "precision_rounded_3dp": null,
+    "prediction": "pred_depth2_branch_1",
+    "rule": "cpi_core_yoy <= 0.0227954 and DGS10 <= 1.745",
+    "conditions": [
+      {
+        "feature": "cpi_core_yoy",
+        "op": "<=",
+        "threshold": 0.022795436903834343
+      },
+      {
+        "feature": "DGS10",
+        "op": "<=",
+        "threshold": 1.7450000047683716
+      }
+    ],
+    "node_samples": 15654
   },
   {
-    "positives": 718,
-    "tp": 580,
-    "fp": 138,
-    "precision": 0.807799442896936,
-    "precision_rounded_3dp": 0.808,
-    "prediction": "pred_high_cpi_weak_dji"
+    "positives": 0,
+    "tp": 0,
+    "fp": 0,
+    "precision": null,
+    "precision_rounded_3dp": null,
+    "prediction": "pred_depth2_branch_2",
+    "rule": "cpi_core_yoy <= 0.0227954 and DGS10 > 1.745",
+    "conditions": [
+      {
+        "feature": "cpi_core_yoy",
+        "op": "<=",
+        "threshold": 0.022795436903834343
+      },
+      {
+        "feature": "DGS10",
+        "op": ">",
+        "threshold": 1.7450000047683716
+      }
+    ],
+    "node_samples": 107143
+  },
+  {
+    "positives": 11760,
+    "tp": 7321,
+    "fp": 4439,
+    "precision": 0.6225340136054421,
+    "precision_rounded_3dp": 0.623,
+    "prediction": "pred_depth2_branch_3",
+    "rule": "cpi_core_yoy > 0.0227954 and FEDFUNDS > 4.965",
+    "conditions": [
+      {
+        "feature": "cpi_core_yoy",
+        "op": ">",
+        "threshold": 0.022795436903834343
+      },
+      {
+        "feature": "FEDFUNDS",
+        "op": ">",
+        "threshold": 4.9649999141693115
+      }
+    ],
+    "node_samples": 12081
   }
 ]

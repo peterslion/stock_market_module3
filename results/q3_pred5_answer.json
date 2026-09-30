@@ -1,10 +1,12 @@
 {
   "prediction": "pred5_clf_10",
-  "test_only_pred5_is_correct": 2622,
+  "test_only_pred5_is_correct": 1801,
   "max_depth": 10,
   "random_state": 42,
   "trained_on": [
     "train",
     "validation"
-  ]
+  ],
+  "missing_values": "filled with 0",
+  "rows_dropped": 0
 }

@@ -17,9 +17,12 @@ Rows from 2000-01-01 onward are split by calendar span into train 70%, validatio
 
 ## Rules from the visualized depth-10 tree
 
-`plot_tree(clf_10, max_depth=2)` shows two branches whose majority class is Positive. The thresholds are the exact splits from `DecisionTreeClassifier(max_depth=10, random_state=42)`.
+`plot_tree(clf_10, max_depth=2)` is read from `DecisionTreeClassifier(max_depth=10, random_state=42)` after infinities and missing values are set to 0. Three nodes at depth 2 have a positive majority class:
 
-- `pred_low_cpi_high_gold`: `cpi_core_yoy <= 0.059659` and `growth_gold_365d > 0.838221`
-- `pred_high_cpi_weak_dji`: `cpi_core_yoy > 0.059659` and `growth_dji_30d <= 0.958290`
+- `pred_depth2_branch_1`: `cpi_core_yoy <= 0.0227954` and `DGS10 <= 1.745`
+- `pred_depth2_branch_2`: `cpi_core_yoy <= 0.0227954` and `DGS10 > 1.745`
+- `pred_depth2_branch_3`: `cpi_core_yoy > 0.0227954` and `FEDFUNDS > 4.965`
 
-On the same test set, precision is **0.563** for the gold branch (31,047 positive predictions) and **0.808** for the Dow branch (718 positive predictions). The better of these two visualized rules is **0.808**.
+The remaining depth-2 node, high core CPI and `FEDFUNDS <= 4.965`, has a negative majority class, so it is not a positive rule.
+
+On the test set, core CPI stays above 0.0227954, so the first two rules make no positive predictions. `pred_depth2_branch_3` predicts positive growth on 11,760 test rows, with 7,321 true positives and 4,439 false positives. `7321 / 11760 = 0.622534`, which rounds to **0.623**. That is the precision of the best positive branch from the depth-2 view.

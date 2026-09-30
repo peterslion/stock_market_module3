@@ -2,7 +2,7 @@
 
 How many TEST records have `pred5_clf_10` correct while every hand rule `pred0` through `pred4` is incorrect?
 
-The classifier is `DecisionTreeClassifier(max_depth=10, random_state=42)`, fit on train plus validation. Rows with a non-finite numerical feature are removed first (`np.isfinite` rejects both infinities and missing values). Percentile outliers are kept. The feature set is the notebook's numerical columns plus dummies for `Month` (month number), `Weekday`, `Ticker`, `ticker_type`, and `month_wom`.
+The classifier is `DecisionTreeClassifier(max_depth=10, random_state=42)`, fit on train plus validation. Infinities and missing feature values are set to 0, and no rows are dropped. The feature set is the notebook's numerical columns plus dummies for `Month` (month number), `Weekday`, `Ticker`, `ticker_type`, and `month_wom`.
 
 Hand rules:
 
@@ -14,6 +14,4 @@ Hand rules:
 
 ## Answer
 
-**2622**
-
-That count is on the 32,051 test rows that remain after dropping non-finite feature rows. 1,112 test rows are excluded because a numerical feature is missing or infinite.
+**1801**
